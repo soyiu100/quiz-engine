@@ -1,0 +1,5 @@
+-- Changelog --
+
+12/21/2018
+- initial push of rough code I wrote a week ago
+- removed Test.java, as well as a cruder README.md than what is already up
