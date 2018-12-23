@@ -1,3 +1,4 @@
+package screens;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -24,8 +25,6 @@ public class QuizTime {
 	 * 37m - grey
 	 */
 	private static final String RESET = "0m";
-
-	private Scanner s;
 
 	private Map<String, ArrayList<String>> qToChoice;
 	private Map<String, ArrayList<String>> qToShort;
