@@ -26,7 +26,7 @@ public abstract class AbstractSelectionScreen {
 		for (int i = 1; i < cycleOptions.size(); i++) {
 			System.out.println(i + ": " + cycleOptions.get(i - 1));	
 		}
-		System.out.println(cycleOptions.get(getOptionNum() + 1));
+		System.out.println(cycleOptions.get(getOptionNum()));
 
 		int choice = -3;
 
@@ -43,7 +43,7 @@ public abstract class AbstractSelectionScreen {
 	}
 	
 	int getOptionNum() {
-		return cycleOptions.size() - 2;
+		return cycleOptions.size() - 1;
 	}
 
 }

@@ -25,7 +25,7 @@ public class StartingScreen extends AbstractSelectionScreen {
 	@Override
 	int choiceAction(int prevResult) {
 		if (prevResult == 1) {
-			new ClassRegisterScreen(sPtr);
+			new ClassManagementScreen(sPtr);
 			return 1;
 		} else if (prevResult == 2) {
 			new QuizEntryCreator(sPtr);

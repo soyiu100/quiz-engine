@@ -7,8 +7,8 @@ public class InputParser {
 
 	public static final List<String> BLACKLISTED_NAMES = Arrays.asList("src", "README.md", "changelog.txt", "bin");
 
-	private static final String ENDALL_KEY = "q~";
-	private static final String END_KEY = "q";
+	public static final String ENDALL_KEY = "q~";
+	public static final String END_KEY = "q`";
 
 	private static final String INSTRC = "...or quit (type \"";
 	private static final String INSTRC_END = "\")";

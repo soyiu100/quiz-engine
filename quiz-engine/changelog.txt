@@ -1,5 +1,8 @@
 -- Changelog --
 
+12/24/2018
+- small progression on small parts; missed 12/23 because mentally bricked for a half-hour 
+
 12/22/2018
 - starting to work on abstracting a lot of components of the engine for 
 cleaner code; currently very incomplete
