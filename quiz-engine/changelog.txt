@@ -2,6 +2,7 @@
 
 12/24/2018
 - small progression on small parts; missed 12/23 because mentally bricked for a half-hour 
+- micro fix that caught my eye first-thing this morning
 
 12/22/2018
 - starting to work on abstracting a lot of components of the engine for 
