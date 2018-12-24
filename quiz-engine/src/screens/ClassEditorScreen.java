@@ -65,7 +65,7 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 
 	@Override
 	void printReenterText() {
-		if (creating > 0) {
+		if (creating) {
 			System.out.println("Please create a course that does not exist.");
 		} else {
 			System.out.println("Please delete a course that exists.");
