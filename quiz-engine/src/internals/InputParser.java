@@ -5,8 +5,8 @@ import java.util.List;
 
 public class InputParser {
 
-	public static final List<String> BLACKLISTED_NAMES = Arrays.asList("src", "README.md", "changelog.txt", "bin");
-
+	public static final List<Character> BLACKLISTED_CHARS = Arrays.asList('`', '~');
+	
 	public static final String ENDALL_KEY = "q~";
 	public static final String END_KEY = "q`";
 

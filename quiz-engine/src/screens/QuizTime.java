@@ -47,13 +47,13 @@ public class QuizTime {
 	public void run() {
 		boolean quitter = false;
 
-		File p = new File(QuizEntryCreator.PHIL242_FILENAME);
-		File c = new File(QuizEntryCreator.CSE332_FILENAME);
-		File m = new File(QuizEntryCreator.MATH308_FILENAME);
+		File p = new File(QuestionEditorScreen.PHIL242_FILENAME);
+		File c = new File(QuestionEditorScreen.CSE332_FILENAME);
+		File m = new File(QuestionEditorScreen.MATH308_FILENAME);
 
 		File t = new File("lmao");
 		if (!p.exists() || !c.exists() || !m.exists() || !t.exists()) {
-			QuizEntryCreator.fileCreate();
+			QuestionEditorScreen.fileCreate();
 		}
 		s = new Scanner(System.in);
 		printClass();

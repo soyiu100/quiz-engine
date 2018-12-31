@@ -1,6 +1,5 @@
 package screens;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -9,12 +8,13 @@ import internals.InputParser;
 
 public class ClassManagementScreen extends AbstractSelectionScreen {
 
-	public ClassManagementScreen(Scanner scan) {
-		super(scan);
+	public ClassManagementScreen(Scanner scan, FileProcessor fp) {
+		super(scan, fp);
+		screenStartAndLoop();
 	}
 
 	@Override
-	void initStartingText() {
+	void initGeneralStart() {
 		startingText = "What would you like to do?";
 
 	}
@@ -28,25 +28,26 @@ public class ClassManagementScreen extends AbstractSelectionScreen {
 
 	@Override
 	int choiceAction(int prevResult) {
-		if (prevResult == 1) {
-			new ClassEditorScreen(sPtr, true);
+		switch (prevResult) {
+		case 1:
+			new ClassEditorScreen(sPtr, fp, true);
 			return 1;
-		} else if (prevResult == 2) {
-			new ClassEditorScreen(sPtr);
+		case 2:
+			new ClassEditorScreen(sPtr, fp);
 			return 2;
-		} else if (prevResult == 3) {
-			FileProcessor.getAllClasses(new ArrayList<String>());
-			new ClassManagementScreen(sPtr);
+		case 3:
+			fp.printAllClasses();
+			new ClassManagementScreen(sPtr, fp);
 			return 3;
-		} else if (prevResult == 4) {
-			new ClassListKeywordScreen(sPtr);
-			new ClassManagementScreen(sPtr);
+		case 4:
+			new ListCoursesByKeywordScreen(sPtr, fp);
+			new ClassManagementScreen(sPtr, fp);
 			return 4;
-		}
-		if (prevResult == -2) {
+		case -2:
 			printReenterText();
+
 		}
-		return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), true);
+		return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), false);
 	}
 
 }

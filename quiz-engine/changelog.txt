@@ -1,5 +1,29 @@
 -- Changelog --
 
+12/30/2018
+- more bugs in paths 1-1 and 1-2 fixed
+- new blacklisted names
+- more bugs with intermittent adding questions in 1-2
+TODO: jsoup to dig dates to start quarters
+TODO: sort (option)?
+TODO: get all classes for the current quarter?
+
+12/29/2018
+- picked up on bug on 1-3 path, where after deleting or creating a course, courses
+are not added, due the way that it is implemented (so I added new methods to make 
+up for that implementation)
+- 1-4 path should also be relatively complete, where repeating prompt issues have been fixed
+- paths 1-1 and 1-2 now account for whether the files actually exists (or not exist), 
+and respond according
+	- also path 1-2 is more clearly acknowledged now! (wow) although that may mean more refactoring
+
+12/28/2018
+- lot of changes that I haven't been able to keep track of (b/c I forgot this log existed):
+- biggest change is progress in implementing QuestionEditor to extend the abstract class,
+as well as cleaning up the packages so that their purposes are separated
+- at this point, the path 1-3 is definitely working, might need to pick up a few bugs
+- also, working on other paths so that they at least function
+
 12/24/2018
 - small progression on small parts; missed 12/23 because mentally bricked for a half-hour 
 - micro fix that caught my eye first-thing this morning

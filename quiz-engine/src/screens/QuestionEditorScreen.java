@@ -1,103 +1,115 @@
 package screens;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-// TODO if squiggle is found in question or answer that isn't the indicating squiggle, 
-// telll them to use a not squiggle
-public class QuizEntryCreator {
+import internals.FileProcessor;
+import internals.InputParser;
 
-	public static final String PHIL242_FILENAME = "242";
-	public static final String CSE332_FILENAME = "332";
-	public static final String MATH308_FILENAME = "308";
+// TODO use InputParser.BLACKLISTED_CHARS to filter out bad input with squiggles or backwards apostrophes
+public class QuestionEditorScreen extends AbstractSelectionScreen {
 
-	private static final String TEST = "lmao";
-	private Scanner s;
+	private FileWriter fw;
 
-	public static void main(String[] args) {
-		new QuizEntryCreator().run();
+	/**
+	 * TODO more source screens?? 0 if prev screen was StartingScreen, 1 if
+	 * ClassEditorScreen
+	 */
+	private int screenSrc;
+
+	public QuestionEditorScreen(Scanner scan, FileProcessor fp) {
+		this(scan, fp, 0);
 	}
 
-	public void run() {
-		File p = new File(PHIL242_FILENAME);
-		File c = new File(CSE332_FILENAME);
-		File m = new File(MATH308_FILENAME);
-		File t = new File(TEST);
-		fileCreate();
-		s = new Scanner(System.in);
-		printClass();
-		Integer input = null;
-		while (input == null) {
-			String str = s.nextLine();
-			if (str.equals("q")) {
-				break;
-			}
-			try {
-				input = Integer.parseInt(str);
-			} catch (Exception e) {
-				System.out.println("Wow, wtf!!!! Enter 1, 2, or 3. Loser.");
-			}
-		}
-		FileWriter fw = null;
+	public QuestionEditorScreen(Scanner scan, FileProcessor fp, int src) {
+		super(scan, fp);
+		// TODO Auto-generated constructor stub; this is probably incomplete
+		screenSrc = src;
+		screenStartAndLoop();
+	}
+
+	@Override
+	void initGeneralStart() {
+		startingText = "Choose a class to write to:";
+	}
+
+	@Override
+	void initCyclingOptions() {
+		cycleOptions = fp.getAllClasses();
+	}
+
+	@Override
+	int choiceAction(int prevResult) {
 		try {
-			if (input == 0) {
-				fw = new FileWriter(t.getName(), true);
-			} else if (input == 1) {
-				fw = new FileWriter(p.getName(), true);
-			} else if (input == 2) {
-				fw = new FileWriter(c.getName(), true);
-			} else if (input == 3) {
-				fw = new FileWriter(m.getName(), true);
-			} else {
-				System.out.println("Try again Dingodile");
-				printClass();
+			if (prevResult == -1) {
+				if (screenSrc == 0) {
+					new StartingScreen(sPtr, fp);
+				} else if (screenSrc == 1) {
+					new ClassEditorScreen(sPtr, fp);
+				}
+			} else if (prevResult != 3) {
+				fw = new FileWriter(cycleOptions.get(prevResult), true);
+				if (fw != null) {
+					questionAdder(fw);
+					fw.close();
+				}
+				return prevResult;
 			}
-			if (fw != null) {
-				questionAdder(fw);
-				fw.close();
-			}
+			assert (prevResult == -3);
+			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), true);
+
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("File creation went wrong...Oops, this should really never happen but");
+			return -1;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			assert (prevResult == -2);
+			printReenterText();
+			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), true);
+		}
+	}
+
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+
+	private class QuestionAdderScreen extends AbstractOpenInputScreen {
+
+		public QuestionAdderScreen(Scanner scan) {
+			super(scan);
+			// TODO init any fields here
+			initStartingText();
+			screenStartAndLoop();
+		}
+
+		@Override
+		void initStartingText() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		int textAction(String choice) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		void printReenterText() {
+			// TODO Auto-generated method stub
+
 		}
 
 	}
-
-	public static void fileCreate() {
-		File p = new File(PHIL242_FILENAME);
-		File c = new File(CSE332_FILENAME);
-		File m = new File(MATH308_FILENAME);
-		File t = new File(TEST);
-		try {
-			if (!p.exists()) {
-				p.createNewFile();
-
-			} else if (!c.exists()) {
-				c.createNewFile();
-
-			} else if (!m.exists()) {
-				m.createNewFile();
-
-			} else if (!t.exists()) {
-				t.createNewFile();
-
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	private void printClass() {
-		System.out.println("Choose a class to write to (Enter 1, 2, or 3):");
-		System.out.println("1: PHIL 242");
-		System.out.println("2: CSE 332");
-		System.out.println("3: MATH 308");
-	}
-
-	// private void questionEditor() {
-	// // TODO future implementation; for now, this isn't that important
-	// }
 
 	private void questionAdder(FileWriter fw) throws IOException {
 		FileWriter localFW = fw;
@@ -182,4 +194,9 @@ public class QuizEntryCreator {
 			input = "";
 		}
 	}
+
+	// private void questionEditor() {
+	// // TODO future implementation; for now, this isn't that important
+	// }
+
 }

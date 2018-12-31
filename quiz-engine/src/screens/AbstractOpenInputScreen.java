@@ -2,8 +2,6 @@ package screens;
 
 import java.util.Scanner;
 
-import internals.InputParser;
-
 public abstract class AbstractOpenInputScreen {
 	
 	protected Scanner sPtr;
@@ -17,16 +15,16 @@ public abstract class AbstractOpenInputScreen {
 	abstract void initStartingText();
 	
 	void screenStartAndLoop() {
-		System.out.println(startingText);
 		String choice = "src";
-		while (choice != InputParser.END_KEY) {
-			textAction(choice);
+		int choiceResult = 0;
+		while (choiceResult >= 0) {
+			choiceResult = textAction(choice);
 			choice = sPtr.nextLine();
 		}
 		textAction(choice);
 	}
 		
-	abstract void textAction(String choice);
+	abstract int textAction(String choice);
 
 	abstract void printReenterText();
 

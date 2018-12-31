@@ -6,10 +6,13 @@ import java.util.Scanner;
 import internals.FileProcessor;
 import internals.InputParser;
 
-public class ClassListKeywordScreen extends AbstractOpenInputScreen {
+public class ListCoursesByKeywordScreen extends AbstractOpenInputScreen {
 	
-	public ClassListKeywordScreen(Scanner scan) {
+	private FileProcessor fp;
+	
+	public ListCoursesByKeywordScreen(Scanner scan, FileProcessor fp) {
 		super(scan);
+		this.fp = fp;
 		initStartingText();
 		screenStartAndLoop();
 	}
@@ -20,11 +23,14 @@ public class ClassListKeywordScreen extends AbstractOpenInputScreen {
 	}
 
 	@Override
-	void textAction(String choice) {
+	int textAction(String choice) {
 		if (choice.equals(InputParser.END_KEY)) {
-			new ClassManagementScreen(sPtr);
+			new ClassManagementScreen(sPtr, fp);
+			return -1;
 		}
-		FileProcessor.getAllClasses(new ArrayList<String>(), choice);
+		fp.printAllClasses(new ArrayList<String>(), choice);
+		System.out.println(startingText);
+		return 0;
 	}
 
 	@Override
