@@ -5,27 +5,27 @@ import java.util.Scanner;
 
 import internals.FileProcessor;
 
-public abstract class AbstractSelectionScreen {
+public abstract class AbstractSelectionScreen implements AbstractScreen {
 	
 	protected Scanner sPtr;
 	protected FileProcessor fp;
+	protected AbstractScreen prevScr;
 
 	protected String startingText;
 	protected List<String> cycleOptions;
 	
-	public AbstractSelectionScreen(Scanner scan, FileProcessor fp) {
+	public AbstractSelectionScreen(Scanner scan, FileProcessor fp, AbstractScreen scr) {
 		sPtr = scan;
 		this.fp = fp;
+		this.prevScr = scr;
 		initGeneralStart();
 		initCyclingOptions();
 	}
 
-	abstract void initGeneralStart();
-
 	abstract void initCyclingOptions();
 
 	
-	void screenStartAndLoop() {
+	public void screenStartAndLoop() {
 		System.out.println(startingText);
 		for (int i = 1; i < cycleOptions.size(); i++) {
 			System.out.println(i + ": " + cycleOptions.get(i - 1));	
@@ -55,7 +55,7 @@ public abstract class AbstractSelectionScreen {
 	 */
 	abstract int choiceAction(int prevResult);
 
-	void printReenterText() {
+	public void printReenterText() {
 		System.out.println("Please enter one of the choices from 1-" + getOptionNum() + ".");
 	}
 	

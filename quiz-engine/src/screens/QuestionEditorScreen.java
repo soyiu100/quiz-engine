@@ -19,46 +19,43 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 	 */
 	private int screenSrc;
 
-	public QuestionEditorScreen(Scanner scan, FileProcessor fp) {
-		this(scan, fp, 0);
+	public QuestionEditorScreen(Scanner scan, FileProcessor fp, AbstractScreen scr) {
+		this(scan, fp, scr, 0);
 	}
 
-	public QuestionEditorScreen(Scanner scan, FileProcessor fp, int src) {
-		super(scan, fp);
-		// TODO Auto-generated constructor stub; this is probably incomplete
+	public QuestionEditorScreen(Scanner scan, FileProcessor fp, AbstractScreen scr, int src) {
+		super(scan, fp, scr);
 		screenSrc = src;
 		screenStartAndLoop();
 	}
 
 	@Override
-	void initGeneralStart() {
+	public void initGeneralStart() {
 		startingText = "Choose a class to write to:";
 	}
 
 	@Override
 	void initCyclingOptions() {
 		cycleOptions = fp.getAllClasses();
+		cycleOptions.add(InputParser.quitMessage(false));
 	}
 
 	@Override
 	int choiceAction(int prevResult) {
 		try {
 			if (prevResult == -1) {
-				if (screenSrc == 0) {
-					new StartingScreen(sPtr, fp);
-				} else if (screenSrc == 1) {
-					new ClassEditorScreen(sPtr, fp);
-				}
-			} else if (prevResult != 3) {
+				prevScr.screenStartAndLoop();
+			} else if (prevResult != -3) {
 				fw = new FileWriter(cycleOptions.get(prevResult), true);
 				if (fw != null) {
-					questionAdder(fw);
+					// TODO
+//					new QuestionAdderScreen(sPtr, fw, this);
 					fw.close();
 				}
 				return prevResult;
 			}
 			assert (prevResult == -3);
-			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), true);
+			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), false);
 
 		} catch (IOException e) {
 			System.out.println("File creation went wrong...Oops, this should really never happen but");
@@ -66,7 +63,7 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			assert (prevResult == -2);
 			printReenterText();
-			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), true);
+			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), false);
 		}
 	}
 
@@ -93,7 +90,7 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 
 		@Override
 		void initStartingText() {
-			// TODO Auto-generated method stub
+			startingText = "Enter a question:";
 
 		}
 
@@ -117,7 +114,6 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 		String input = "";
 		boolean loser = false;
 		while (!input.equals("q~")) {
-			System.out.println("Enter a question:");
 			String qBit = "";
 			while (!qBit.equals("//")) {
 				if (!qBit.equals("")) {

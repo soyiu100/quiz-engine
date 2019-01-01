@@ -10,22 +10,22 @@ public class ListCoursesByKeywordScreen extends AbstractOpenInputScreen {
 	
 	private FileProcessor fp;
 	
-	public ListCoursesByKeywordScreen(Scanner scan, FileProcessor fp) {
-		super(scan);
+	public ListCoursesByKeywordScreen(Scanner scan, FileProcessor fp, AbstractScreen scr) {
+		super(scan, scr);
 		this.fp = fp;
-		initStartingText();
+		initGeneralStart();
 		screenStartAndLoop();
 	}
 
 	@Override
-	void initStartingText() {
+	public void initGeneralStart() {
 		startingText = "What's the keyword that you would like to filter the courses by?";
 	}
 
 	@Override
 	int textAction(String choice) {
 		if (choice.equals(InputParser.END_KEY)) {
-			new ClassManagementScreen(sPtr, fp);
+			prevScr.screenStartAndLoop();
 			return -1;
 		}
 		fp.printAllClasses(new ArrayList<String>(), choice);
@@ -34,7 +34,7 @@ public class ListCoursesByKeywordScreen extends AbstractOpenInputScreen {
 	}
 
 	@Override
-	void printReenterText() {}
+	public void printReenterText() {}
 
 
 }

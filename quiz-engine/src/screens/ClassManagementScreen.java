@@ -8,13 +8,13 @@ import internals.InputParser;
 
 public class ClassManagementScreen extends AbstractSelectionScreen {
 
-	public ClassManagementScreen(Scanner scan, FileProcessor fp) {
-		super(scan, fp);
+	public ClassManagementScreen(Scanner scan, FileProcessor fp, AbstractSelectionScreen scr) {
+		super(scan, fp, scr);
 		screenStartAndLoop();
 	}
 
 	@Override
-	void initGeneralStart() {
+	public void initGeneralStart() {
 		startingText = "What would you like to do?";
 
 	}
@@ -30,22 +30,19 @@ public class ClassManagementScreen extends AbstractSelectionScreen {
 	int choiceAction(int prevResult) {
 		switch (prevResult) {
 		case 1:
-			new ClassEditorScreen(sPtr, fp, true);
-			return 1;
+			new ClassEditorScreen(sPtr, fp, this, true);
 		case 2:
-			new ClassEditorScreen(sPtr, fp);
-			return 2;
+			new ClassEditorScreen(sPtr, fp, this);
 		case 3:
 			fp.printAllClasses();
-			new ClassManagementScreen(sPtr, fp);
-			return 3;
+			screenStartAndLoop();
 		case 4:
-			new ListCoursesByKeywordScreen(sPtr, fp);
-			new ClassManagementScreen(sPtr, fp);
-			return 4;
+			new ListCoursesByKeywordScreen(sPtr, fp, this);
+			screenStartAndLoop();
+		case -1:
+			prevScr.screenStartAndLoop();
 		case -2:
 			printReenterText();
-
 		}
 		return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), false);
 	}

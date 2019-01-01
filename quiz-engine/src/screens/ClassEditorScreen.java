@@ -11,26 +11,26 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 
 	private boolean creating;
 	private boolean srcBlock;
-	
+
 	private FileProcessor fp;
 
-	public ClassEditorScreen(Scanner scan, FileProcessor fp) { // fp arg in case the user is to return to the previous
-																// screen
-		this(scan, fp, false);
+	public ClassEditorScreen(Scanner scan, FileProcessor fp, AbstractScreen scr) { // fp arg in case the user is to
+																					// return to the previous screen
+		this(scan, fp, scr, false);
 	}
 
-	public ClassEditorScreen(Scanner scan, FileProcessor fp, boolean creating) {
-		super(scan);
+	public ClassEditorScreen(Scanner scan, FileProcessor fp, AbstractScreen scr, boolean creating) {
+		super(scan, scr);
 		this.creating = creating;
 		this.srcBlock = true;
 		this.fp = fp;
-		initStartingText();
+		initGeneralStart();
 		screenStartAndLoop();
 
 	}
 
 	@Override
-	void initStartingText() {
+	public void initGeneralStart() {
 		if (creating) {
 			startingText = "What course would you like to create?";
 		} else {
@@ -41,7 +41,7 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 	@Override
 	int textAction(String choice) {
 		if (choice.equals(InputParser.END_KEY)) {
-			new ClassManagementScreen(sPtr, fp);
+			prevScr.screenStartAndLoop();
 			return -1;
 		} else {
 			File potentFile = new File(choice);
@@ -61,7 +61,8 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 							int inputResult = 3;
 							while (inputResult == 3) {
 								if (input.startsWith("yes") || input.equals("y")) {
-									new QuestionEditorScreen(sPtr, fp);
+									srcBlock = true;
+									new QuestionEditorScreen(sPtr, fp, this);
 									inputResult = -1;
 								} else if (input.equals("no") || input.equals("n")) {
 									srcBlock = true;
@@ -70,11 +71,11 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 								} else {
 									System.out.println("Sorry, I didn't understand that.");
 									input = sPtr.nextLine();
-								}						
+								}
 							}
 							return inputResult;
 						}
-						
+
 					} else {
 						if (potentFile.exists()) {
 							potentFile.delete();
@@ -102,7 +103,7 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 	}
 
 	@Override
-	void printReenterText() {
+	public void printReenterText() {
 		if (creating) {
 			System.out.println("Please create a course that does not exist.");
 		} else {

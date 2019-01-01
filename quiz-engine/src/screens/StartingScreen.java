@@ -9,12 +9,12 @@ import internals.InputParser;
 public class StartingScreen extends AbstractSelectionScreen {
 
 	public StartingScreen(Scanner scan) {
-		super(scan, new FileProcessor());
+		super(scan, new FileProcessor(), null);
 		screenStartAndLoop();
 	}
 
 	public StartingScreen(Scanner scan, FileProcessor fp) {
-		super(scan, fp);
+		super(scan, fp, null);
 		screenStartAndLoop();
 	}
 
@@ -33,14 +33,14 @@ public class StartingScreen extends AbstractSelectionScreen {
 	int choiceAction(int prevResult) {
 		switch (prevResult) {
 		case 1:
-			new ClassManagementScreen(sPtr, fp);
-			return 1;
+			new ClassManagementScreen(sPtr, fp, this);
 		case 2:
-			new QuestionEditorScreen(sPtr, fp);
-			return 2;
+			new QuestionEditorScreen(sPtr, fp, this);
 		case 3:
-			// new QuizTime(sPtr, fp);
-			return 3;
+			// TODO
+//			 new QuizTime(sPtr, fp);
+		case -1:
+			System.exit(2);
 		case -2:
 			printReenterText();
 		}

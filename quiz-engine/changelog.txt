@@ -8,6 +8,8 @@ TODO: get all classes for the current quarter?
 - fixing up potential errors in name processing
 - avoided invoking with a recursiveaction within a recursiveaction
 - fixed more 1-2
+- bugs fixed in ClassManagementScreen
+- overhaul to avoid creating additional objects when going backwards
 
 12/30/2018
 - more bugs in paths 1-1 and 1-2 fixed
