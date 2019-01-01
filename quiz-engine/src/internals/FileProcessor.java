@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
-import java.util.concurrent.RecursiveTask;
 
 public class FileProcessor {
 
@@ -60,42 +59,6 @@ public class FileProcessor {
 		}
 	}
 
-	private static class SubWordTask extends RecursiveTask<Boolean> {
-
-		int lo, hi;
-		String targ;
-
-		public SubWordTask(String targ, int lo, int hi) {
-			this.targ = targ;
-			this.lo = lo;
-			this.hi = hi;
-		}
-
-		/**
-		 * @return false if target contains blacklisted word, else returns true
-		 */
-		@Override
-		protected Boolean compute() {
-			if (hi - lo == 1) {
-				return targ.contains(BLACKLISTED_NAMES.get(lo)) ? false : true;
-			} else if (hi - lo != 0) {
-				int mid = lo + (hi - lo) / 2;
-
-				SubWordTask left = new SubWordTask(targ, lo, mid);
-				SubWordTask right = new SubWordTask(targ, mid, hi);
-
-				left.fork();
-				boolean rightResult = right.join();
-				boolean leftResult = left.compute();
-
-				return leftResult && rightResult;
-			}
-			return true;
-
-		}
-
-	}
-
 	private static class ClassListingTask extends RecursiveAction {
 
 		private static final long serialVersionUID = 1L;
@@ -124,12 +87,36 @@ public class FileProcessor {
 		@Override
 		protected void compute() {
 			if (hi - lo == 1) {
-				if (files != null) { // constructor pass through FJTask
-					if (POOL.invoke(new SubWordTask(files[lo].getName(), 0, BLACKLISTED_NAMES.size()))) {
-						newList.add(files[lo].getName());
+				if (files != null) { // indicates this is a call from the constructor of FP
+					if (!files[lo].getName().startsWith(".")) {
+						ClassListingTask[] branches = new ClassListingTask[BLACKLISTED_NAMES.size()];
+						List<String> testList = new ArrayList<>();
+						List<String> singleFilename = Arrays.asList(files[lo].getName());
+						boolean blacklisted = false;
+						for (int i = 0; i < BLACKLISTED_NAMES.size() - 1; i++) {
+							branches[i] = new ClassListingTask(singleFilename, testList, 0, 1, BLACKLISTED_NAMES.get(i));
+							branches[i].fork();
+						}
+						new ClassListingTask(singleFilename, testList, 0, 1,
+								BLACKLISTED_NAMES.get(BLACKLISTED_NAMES.size() - 1)).compute();
+							
+						if (testList.isEmpty()) { // the filename does NOT contain the last blacklisted name
+							for (int i = 0; i < branches.length - 1; i++) {
+								branches[i].join();
+								if (!testList.isEmpty()) {
+									blacklisted = true;
+									break;
+								}
+							}
+						} else {
+							blacklisted = true;
+						}
+						if (!blacklisted) {
+							newList.add(files[lo].getName());
+						}
 					}
+
 				} else {
-					assert (POOL.invoke(new SubWordTask(filenames.get(lo), 0, BLACKLISTED_NAMES.size())));
 					if (filenames.get(lo).contains(keyword)) {
 						newList.add(filenames.get(lo));
 					}

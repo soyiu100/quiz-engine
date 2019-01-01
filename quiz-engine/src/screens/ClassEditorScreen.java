@@ -63,7 +63,9 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 								if (input.startsWith("yes") || input.equals("y")) {
 									new QuestionEditorScreen(sPtr, fp);
 									inputResult = -1;
-								} else if (input.equals("no") || input.equals("n")){
+								} else if (input.equals("no") || input.equals("n")) {
+									srcBlock = true;
+									screenStartAndLoop();
 									inputResult = 0;
 								} else {
 									System.out.println("Sorry, I didn't understand that.");
@@ -85,7 +87,7 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 					}
 					return 0;
 				} catch (IOException e) {
-					System.out.println("Oops, something went wrong on our end. Please report this issue.");
+					printReenterText();
 				}
 			} else {
 				if (srcBlock && choice.equals("src")) {
