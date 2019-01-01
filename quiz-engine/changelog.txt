@@ -7,6 +7,7 @@ TODO: get all classes for the current quarter?
 12/31/2018
 - fixing up potential errors in name processing
 - avoided invoking with a recursiveaction within a recursiveaction
+- fixed more 1-2
 
 12/30/2018
 - more bugs in paths 1-1 and 1-2 fixed
