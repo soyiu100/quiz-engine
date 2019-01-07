@@ -13,20 +13,19 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 
 	private FileWriter fw;
 
-	/**
-	 * TODO more source screens?? 0 if prev screen was StartingScreen, 1 if
-	 * ClassEditorScreen
-	 */
-	private int screenSrc;
-
 	public QuestionEditorScreen(Scanner scan, FileProcessor fp, AbstractScreen scr) {
 		this(scan, fp, scr, 0);
 	}
 
-	public QuestionEditorScreen(Scanner scan, FileProcessor fp, AbstractScreen scr, int src) {
+	public QuestionEditorScreen(Scanner scan, FileProcessor fp, AbstractScreen scr, int optionStart) {
 		super(scan, fp, scr);
-		screenSrc = src;
-		screenStartAndLoop();
+		if (optionStart != 0) {
+			// TODO refer to changelog
+			new QuestionAdderScreen(scan, this, cycleOptions.get(optionStart), true);
+		} else {
+			screenStartAndLoop();			
+		}
+		
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 	@Override
 	void initCyclingOptions() {
 		cycleOptions = fp.getAllClasses();
-		cycleOptions.add(InputParser.quitMessage(false));
+		cycleOptions.add(InputParser.quitMessage());
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 			if (prevResult == -1) {
 				prevScr.screenStartAndLoop();
 			} else if (prevResult != -3) {
-				fw = new FileWriter(cycleOptions.get(prevResult), true);
+				fw = new FileWriter(cycleOptions.get(prevResult - 1), true);
 				if (fw != null) {
 					// TODO
 //					new QuestionAdderScreen(sPtr, fw, this);
@@ -55,7 +54,7 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 				return prevResult;
 			}
 			assert (prevResult == -3);
-			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), false);
+			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum());
 
 		} catch (IOException e) {
 			System.out.println("File creation went wrong...Oops, this should really never happen but");
@@ -63,7 +62,7 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			assert (prevResult == -2);
 			printReenterText();
-			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), false);
+			return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum());
 		}
 	}
 
@@ -79,21 +78,22 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 	// TODO
 	// TODO
 
-	private class QuestionAdderScreen extends AbstractOpenInputScreen {
+	private class QuestionAdderScreen extends AbstractMultiLineInputScreen {
 
-		public QuestionAdderScreen(Scanner scan) {
-			super(scan);
+		public QuestionAdderScreen(Scanner scan, AbstractScreen scr, String filename, boolean ignore) {
+			super(scan, scr);
 			// TODO init any fields here
-			initStartingText();
+			initGeneralStart();
+			initEndInputKey();
+			this.ignoreBlankLines = ignore;
 			screenStartAndLoop();
 		}
-
+		
 		@Override
-		void initStartingText() {
+		public void initGeneralStart() {
 			startingText = "Enter a question:";
-
 		}
-
+		
 		@Override
 		int textAction(String choice) {
 			// TODO Auto-generated method stub
@@ -101,10 +101,14 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 		}
 
 		@Override
-		void printReenterText() {
-			// TODO Auto-generated method stub
+		public void printReenterText() {}
 
+		@Override
+		void initEndInputKey() {
+			endInputKey = "//";
 		}
+
+
 
 	}
 

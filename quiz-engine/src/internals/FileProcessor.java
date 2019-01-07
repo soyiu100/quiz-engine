@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
+/**
+ * Strictly processes any specific to files and filenames.
+ * @author Isaac Pang
+ *
+ */
 public class FileProcessor {
 
 	public static final List<String> BLACKLISTED_NAMES = Arrays.asList("src", "README", "changelog", "bin", "jsoup",
@@ -27,39 +32,7 @@ public class FileProcessor {
 		return new ArrayList<String>(allFilenames);
 	}
 
-	public void printAllClasses() {
-		printAllClasses(null, "");
-	}
-
-	public void printAllClasses(List<String> newList, String keyword) {
-		if (!BLACKLISTED_NAMES.contains(keyword)) {
-			String possInitStr = "== Here are all of the courses currently created";
-			if (keyword.length() == 0 || newList == null) {
-				System.out.print(possInitStr);
-				System.out.println(" ==");
-				for (String filename : allFilenames) {
-					System.out.println(filename);
-				}
-			} else {
-				String respondent = ", filtered by the keyword \"" + keyword + "\" ==";
-				POOL.invoke(new ClassListingTask(allFilenames, newList, 0, allFilenames.size(), keyword));
-				if (newList.isEmpty()) {
-					System.out.print("== There are no courses" + respondent);
-				} else {
-					System.out.print(possInitStr);
-					System.out.println(respondent);
-					for (String filename : newList) {
-						System.out.println(filename);
-					}
-				}
-
-			}
-
-			System.out.println();
-		}
-	}
-
-	private static class ClassListingTask extends RecursiveAction {
+	public static class ClassListingTask extends RecursiveAction {
 
 		private static final long serialVersionUID = 1L;
 
@@ -145,11 +118,15 @@ public class FileProcessor {
 
 	}
 
-	public boolean add(String filename) {
+	public boolean addClass(String filename) {
 		return this.allFilenames.add(filename);
 	}
 
-	public boolean remove(String filename) {
+	public boolean removeClass(String filename) {
 		return this.allFilenames.remove(filename);
+	}
+	
+	public int numClasses() {
+		return this.allFilenames.size();
 	}
 }

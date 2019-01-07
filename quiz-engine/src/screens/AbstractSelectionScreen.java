@@ -62,5 +62,5 @@ public abstract class AbstractSelectionScreen implements AbstractScreen {
 	int getOptionNum() {
 		return cycleOptions.size() - 1;
 	}
-
+	
 }

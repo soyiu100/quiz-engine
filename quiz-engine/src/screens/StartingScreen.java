@@ -26,7 +26,7 @@ public class StartingScreen extends AbstractSelectionScreen {
 	@Override
 	public void initCyclingOptions() {
 		cycleOptions = Arrays.asList("Course Creation/Deletion", "Quiz Entry Creator", "Start a Quiz!",
-				InputParser.quitMessage(true));
+				InputParser.quitMessage());
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class StartingScreen extends AbstractSelectionScreen {
 			printReenterText();
 		}
 
-		return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), true);
+		return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum());
 	}
 
 }

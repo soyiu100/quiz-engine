@@ -10,7 +10,6 @@ import internals.InputParser;
 public class ClassEditorScreen extends AbstractOpenInputScreen {
 
 	private boolean creating;
-	private boolean srcBlock;
 
 	private FileProcessor fp;
 
@@ -22,7 +21,6 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 	public ClassEditorScreen(Scanner scan, FileProcessor fp, AbstractScreen scr, boolean creating) {
 		super(scan, scr);
 		this.creating = creating;
-		this.srcBlock = true;
 		this.fp = fp;
 		initGeneralStart();
 		screenStartAndLoop();
@@ -31,75 +29,80 @@ public class ClassEditorScreen extends AbstractOpenInputScreen {
 
 	@Override
 	public void initGeneralStart() {
+		StringBuilder sb = new StringBuilder();
 		if (creating) {
-			startingText = "What course would you like to create?";
+			sb.append("What course would you like to create?");
 		} else {
-			startingText = "What course would you like to delete?";
+			sb.append("What course would you like to delete?");
 		}
+		sb.append("\n(");
+		sb.append(InputParser.quitMessage());
+		sb.append(")");
+		startingText = sb.toString();
 	}
 
 	@Override
 	int textAction(String choice) {
-		if (choice.equals(InputParser.END_KEY)) {
-			prevScr.screenStartAndLoop();
-			return -1;
-		} else {
-			File potentFile = new File(choice);
-			// TODO redo the filter
-			if (!FileProcessor.BLACKLISTED_NAMES.contains(choice)) {
-				// TODO possible refactoring?
-				try {
-					if (creating) {
-						if (potentFile.exists()) {
-							printReenterText();
-						} else {
-							potentFile.createNewFile();
-							fp.add(potentFile.getName());
-							System.out.println("Course created!");
-							System.out.println("Would you like to add questions to this course?");
-							String input = sPtr.nextLine();
-							int inputResult = 3;
-							while (inputResult == 3) {
-								if (input.startsWith("yes") || input.equals("y")) {
-									srcBlock = true;
-									new QuestionEditorScreen(sPtr, fp, this);
-									inputResult = -1;
-								} else if (input.equals("no") || input.equals("n")) {
-									srcBlock = true;
-									screenStartAndLoop();
-									inputResult = 0;
-								} else {
-									System.out.println("Sorry, I didn't understand that.");
-									input = sPtr.nextLine();
-								}
-							}
-							return inputResult;
-						}
-
-					} else {
-						if (potentFile.exists()) {
-							potentFile.delete();
-							System.out.println("Course deleted!");
-							fp.remove(potentFile.getName());
-						} else {
-							printReenterText();
-						}
-						System.out.println(startingText);
-					}
-					return 0;
-				} catch (IOException e) {
-					printReenterText();
-				}
+		if (choice != null) {
+			if (choice.equals(InputParser.SCREND_KEY)) {
+				prevScr.screenStartAndLoop();
+				return -1;
 			} else {
-				if (srcBlock && choice.equals("src")) {
-					srcBlock = false;
+				File potentFile = new File(choice);
+				// TODO redo the filter right below
+				if (!FileProcessor.BLACKLISTED_NAMES.contains(choice)) {
+					// TODO possible refactoring?
+					try {
+						if (creating) {
+							if (potentFile.exists()) {
+								printReenterText();
+							} else {
+								potentFile.createNewFile();
+								fp.addClass(potentFile.getName());
+								System.out.println("Course created!");
+								System.out.println("Would you like to add questions to this course?");
+								String input = sPtr.nextLine();
+								int inputResult = 3;
+								while (inputResult == 3) {
+									if (input.startsWith("yes") || input.equals("y")) {
+										new QuestionEditorScreen(sPtr, fp, this, fp.numClasses() - 1);
+										inputResult = -1;
+									} else if (input.equals("no") || input.equals("n")) {
+										screenStartAndLoop();
+										inputResult = 0;
+									} else {
+										System.out.println("Sorry, I didn't understand that.");
+										input = sPtr.nextLine();
+									}
+								}
+								return inputResult;
+							}
+
+						} else {
+							if (potentFile.exists()) {
+								potentFile.delete();
+								System.out.println("Course deleted!");
+								fp.removeClass(potentFile.getName());
+							} else {
+								printReenterText();
+							}
+							System.out.println(startingText);
+						}
+						return 0;
+					} catch (IOException e) {
+						printReenterText();
+					}
 				} else {
 					System.out.println("Print a valid name.");
+					System.out.println(startingText);
 				}
-				System.out.println(startingText);
 			}
 			return 0;
+		} else {
+			System.out.println(startingText);
+			return 0;			
 		}
+
 	}
 
 	@Override

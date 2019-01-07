@@ -22,7 +22,7 @@ public class ClassManagementScreen extends AbstractSelectionScreen {
 	@Override
 	void initCyclingOptions() {
 		cycleOptions = Arrays.asList("Create a course", "Delete a course", "List all course quizzes",
-				"List all course quizzes by a certain keyword", InputParser.quitMessage(false));
+				"List all course quizzes by a certain keyword", InputParser.quitMessage());
 
 	}
 
@@ -34,7 +34,7 @@ public class ClassManagementScreen extends AbstractSelectionScreen {
 		case 2:
 			new ClassEditorScreen(sPtr, fp, this);
 		case 3:
-			fp.printAllClasses();
+			InputParser.printAllClasses(fp);
 			screenStartAndLoop();
 		case 4:
 			new ListCoursesByKeywordScreen(sPtr, fp, this);
@@ -44,7 +44,7 @@ public class ClassManagementScreen extends AbstractSelectionScreen {
 		case -2:
 			printReenterText();
 		}
-		return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum(), false);
+		return InputParser.choiceCheck(sPtr.nextLine(), getOptionNum());
 	}
 
 }

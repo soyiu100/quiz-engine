@@ -2,7 +2,21 @@
 
 TODO: jsoup to dig dates to start quarters
 TODO: sort (option)?
-TODO: get all classes for the current quarter?
+TODO: get all classes for the current quarter? (when 
+TODO: somewhere between QuestionEditor and QuestionAdder, there needs to be a "do you want to ignore blank lines kinda thing"
+
+1/7/2019
+- got rid of some dumb logic in ClassEditorScreen by changing AbstractOpenInputScreen in minor ways
+
+1/4/2019
+- more work on QuestionEditorScreen
+- path to 1-2-y fixed
+- more changes to accommodate for a input stopper 
+
+1/3/2019
+- minor bug in QuestionEditorScreen fixed
+- coming to the realization that there doesn't need to be a separate 
+key for ending the program and going to a previous screen
 
 12/31/2018
 - fixing up potential errors in name processing
