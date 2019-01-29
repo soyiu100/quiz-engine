@@ -25,11 +25,13 @@ public class ListCoursesByKeywordScreen extends AbstractOpenInputScreen {
 
 	@Override
 	int textAction(String choice) {
-		if (choice.equals(InputParser.SCREND_KEY)) {
-			prevScr.screenStartAndLoop();
-			return -1;
-		}
-		InputParser.printAllClasses(new ArrayList<String>(), choice, fp);
+		if (choice != null) {
+			if (choice.equals(InputParser.SCREND_KEY)) {
+				prevScr.screenStartAndLoop();
+				return -1;
+			}
+			InputParser.printAllClasses(new ArrayList<String>(), choice, fp);
+		} 
 		System.out.println(startingText);
 		return 0;
 	}

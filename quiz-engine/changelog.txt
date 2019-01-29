@@ -1,9 +1,19 @@
 -- Changelog --
 
 TODO: jsoup to dig dates to start quarters
-TODO: sort (option)?
-TODO: get all classes for the current quarter? (when 
+TODO: sort (option)? -- second phase feature
+TODO: get all classes for the current quarter? -- second phase feature
 TODO: somewhere between QuestionEditor and QuestionAdder, there needs to be a "do you want to ignore blank lines kinda thing"
+TODO: blacklisted chars!!!!!! use it~!!!!!!!!
+TODO: unimportant input to lowercase (so far this hasn't been important, but there might be something you missed)
+
+TODO: recently discovered issue where some files listed show up as null; might wanna check that out without doing a second pass
+
+1/28/2019
+- motivated (pressured?) myself into picking it back up and making at _least_ 
+the quizzing section viable with the coming wave of midterms soon to come
+- crudely stapled a fix over the null/disappearing files bug for now to satiate my needs first
+
 
 1/7/2019
 - got rid of some dumb logic in ClassEditorScreen by changing AbstractOpenInputScreen in minor ways

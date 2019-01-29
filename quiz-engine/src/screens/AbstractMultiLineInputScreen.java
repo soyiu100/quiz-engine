@@ -14,12 +14,7 @@ public abstract class AbstractMultiLineInputScreen extends AbstractOpenInputScre
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void screenStartAndLoop() {
-		while () {
-			
-		}
-		
-	}
+	// TODO: the possibility if overriding the screen loop
 	
 	abstract void initEndInputKey();
 

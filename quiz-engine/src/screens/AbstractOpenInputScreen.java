@@ -21,7 +21,6 @@ public abstract class AbstractOpenInputScreen implements AbstractScreen {
 			choiceResult = textAction(choice);
 			choice = sPtr.nextLine();
 		}
-		textAction(choice);
 	}
 		
 	/**

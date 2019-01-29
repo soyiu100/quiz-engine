@@ -38,7 +38,7 @@ public class StartingScreen extends AbstractSelectionScreen {
 			new QuestionEditorScreen(sPtr, fp, this);
 		case 3:
 			// TODO
-//			 new QuizTime(sPtr, fp);
+			 new QuizTimeScreen(sPtr, fp, this);
 		case -1:
 			System.exit(2);
 		case -2:

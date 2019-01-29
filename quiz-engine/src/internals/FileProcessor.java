@@ -3,12 +3,15 @@ package internals;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
 /**
  * Strictly processes any specific to files and filenames.
+ * 
  * @author Isaac Pang
  *
  */
@@ -19,13 +22,19 @@ public class FileProcessor {
 
 	private final static ForkJoinPool POOL = new ForkJoinPool();
 
-	private List<String> allFilenames;
+	private Set<String> allFilenames;
 
 	public FileProcessor() {
-		allFilenames = new ArrayList<String>();
+		allFilenames = new HashSet<String>();
+		initAllFiles();
+	}
+
+	private void initAllFiles() {
 		File[] files = new File(".").listFiles();
 		POOL.invoke(new ClassListingTask(files, allFilenames, 0, files.length, ""));
-
+		// TODO
+		// inefficent second pass, but surefire way to clog null or "disappearing" classes for small class sizes FOR NOW
+		POOL.invoke(new ClassListingTask(files, allFilenames, 0, files.length, ""));
 	}
 
 	public List<String> getAllClasses() {
@@ -37,11 +46,12 @@ public class FileProcessor {
 		private static final long serialVersionUID = 1L;
 
 		File[] files;
-		List<String> newList, filenames;
+		Set<String> newList;
+		List<String> filenames;
 		int lo, hi;
 		String keyword;
 
-		public ClassListingTask(File[] files, List<String> newList, int lo, int hi, String keyword) {
+		public ClassListingTask(File[] files, Set<String> newList, int lo, int hi, String keyword) {
 			this.files = files;
 			this.newList = newList;
 			this.lo = lo;
@@ -49,7 +59,7 @@ public class FileProcessor {
 			this.keyword = keyword;
 		}
 
-		public ClassListingTask(List<String> filenames, List<String> newList, int lo, int hi, String keyword) {
+		public ClassListingTask(List<String> filenames, Set<String> newList, int lo, int hi, String keyword) {
 			this.filenames = filenames;
 			this.newList = newList;
 			this.lo = lo;
@@ -62,35 +72,37 @@ public class FileProcessor {
 			if (hi - lo == 1) {
 				if (files != null) { // indicates this is a call from the constructor of FP
 					if (!files[lo].getName().startsWith(".")) {
-						ClassListingTask[] branches = new ClassListingTask[BLACKLISTED_NAMES.size()];
-						List<String> testList = new ArrayList<>();
+
+						RecursiveAction[] branches = new RecursiveAction[BLACKLISTED_NAMES.size() - 1];
+						Set<String> testList = new HashSet<>();
 						List<String> singleFilename = Arrays.asList(files[lo].getName());
 						boolean blacklisted = false;
 						for (int i = 0; i < BLACKLISTED_NAMES.size() - 1; i++) {
-							branches[i] = new ClassListingTask(singleFilename, testList, 0, 1, BLACKLISTED_NAMES.get(i));
+							branches[i] = new ClassListingTask(singleFilename, testList, 0, 1,
+									BLACKLISTED_NAMES.get(i));
 							branches[i].fork();
 						}
 						new ClassListingTask(singleFilename, testList, 0, 1,
 								BLACKLISTED_NAMES.get(BLACKLISTED_NAMES.size() - 1)).compute();
-							
-						if (testList.isEmpty()) { // the filename does NOT contain the last blacklisted name
-							for (int i = 0; i < branches.length - 1; i++) {
-								branches[i].join();
-								if (!testList.isEmpty()) {
-									blacklisted = true;
-									break;
-								}
+
+						for (int i = 0; i < BLACKLISTED_NAMES.size(); i++) {
+							if (!testList.isEmpty()) { // the filename does NOT contain the blacklisted name
+								blacklisted = true;
+								break;
 							}
-						} else {
-							blacklisted = true;
+							
+							if (i != BLACKLISTED_NAMES.size() - 1) {
+								branches[i].join();
+							}
 						}
-						if (!blacklisted) {
+
+						if (!blacklisted && files[lo] != null) {
 							newList.add(files[lo].getName());
 						}
 					}
 
 				} else {
-					if (filenames.get(lo).contains(keyword)) {
+					if (filenames.get(lo).contains(keyword) && filenames.get(lo) != null) {
 						newList.add(filenames.get(lo));
 					}
 				}
@@ -125,7 +137,7 @@ public class FileProcessor {
 	public boolean removeClass(String filename) {
 		return this.allFilenames.remove(filename);
 	}
-	
+
 	public int numClasses() {
 		return this.allFilenames.size();
 	}

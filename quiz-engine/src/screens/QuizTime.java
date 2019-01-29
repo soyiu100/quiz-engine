@@ -47,46 +47,46 @@ public class QuizTime {
 	public void run() {
 		boolean quitter = false;
 
-		File p = new File(QuestionEditorScreen.PHIL242_FILENAME);
-		File c = new File(QuestionEditorScreen.CSE332_FILENAME);
-		File m = new File(QuestionEditorScreen.MATH308_FILENAME);
-
-		File t = new File("lmao");
-		if (!p.exists() || !c.exists() || !m.exists() || !t.exists()) {
-			QuestionEditorScreen.fileCreate();
-		}
-		s = new Scanner(System.in);
-		printClass();
-		Integer input = null;
-		while (input == null) {
-			String str = s.nextLine();
-			if (str.toLowerCase().equals("q")) {
-				quitter = true;
-				break;
-			}
-			try {
-				input = Integer.parseInt(str);
-			} catch (Exception e) {
-				System.out.println("Wow, wtf!!!! Enter 1, 2, or 3. Loser.");
-			}
-		}
-		if (!quitter) {
-			BufferedReader br = null;
-			try {
-				if (input.intValue() == 1) {
-					br = new BufferedReader(new FileReader(p.getName()));
-				} else if (input.intValue() == 2) {
-					br = new BufferedReader(new FileReader(c.getName()));
-				} else if (input.intValue() == 3) {
-					br = new BufferedReader(new FileReader(m.getName()));
-				} else {
-					if (input.intValue() == 0) {
-						br = new BufferedReader(new FileReader("lmao"));
-					} else {
-						System.out.println("Try again Dingodile");
-						run();
-					}
-				}
+//		File p = new File(QuestionEditorScreen.PHIL242_FILENAME);
+//		File c = new File(QuestionEditorScreen.CSE332_FILENAME);
+//		File m = new File(QuestionEditorScreen.MATH308_FILENAME);
+//
+//		File t = new File("lmao");
+//		if (!p.exists() || !c.exists() || !m.exists() || !t.exists()) {
+//			QuestionEditorScreen.fileCreate();
+//		}
+//		s = new Scanner(System.in);
+//		printClass();
+//		Integer input = null;
+//		while (input == null) {
+//			String str = s.nextLine();
+//			if (str.toLowerCase().equals("q")) {
+//				quitter = true;
+//				break;
+//			}
+//			try {
+//				input = Integer.parseInt(str);
+//			} catch (Exception e) {
+//				System.out.println("Wow, wtf!!!! Enter 1, 2, or 3. Loser.");
+//			}
+//		}
+//		if (!quitter) {
+//			BufferedReader br = null;
+//			try {
+//				if (input.intValue() == 1) {
+//					br = new BufferedReader(new FileReader(p.getName()));
+//				} else if (input.intValue() == 2) {
+//					br = new BufferedReader(new FileReader(c.getName()));
+//				} else if (input.intValue() == 3) {
+//					br = new BufferedReader(new FileReader(m.getName()));
+//				} else {
+//					if (input.intValue() == 0) {
+//						br = new BufferedReader(new FileReader("lmao"));
+//					} else {
+//						System.out.println("Try again Dingodile");
+//						run();
+//					}
+//				}
 				if (input != null) {
 					String line = br.readLine();
 					String currQuestion = "";
@@ -364,10 +364,10 @@ public class QuizTime {
 
 	}
 
-	private void printClass() {
-		System.out.println("Choose a class to quiz from (Enter 1, 2, or 3):");
-		System.out.println("1: PHIL 242");
-		System.out.println("2: CSE 332");
-		System.out.println("3: MATH 308");
-	}
+//	private void printClass() {
+//		System.out.println("Choose a class to quiz from (Enter 1, 2, or 3):");
+//		System.out.println("1: PHIL 242");
+//		System.out.println("2: CSE 332");
+//		System.out.println("3: MATH 308");
+//	}
 }

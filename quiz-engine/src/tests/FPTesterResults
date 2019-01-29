@@ -1,0 +1,43 @@
+= Fail Log = 
+*# of classes - # of iterations of FP before fail*
+10 classes - 9507 iterations
+40 classes - 45824 iterations
+1004 classes - 132 iterations
+1004 classes - 191 iterations
+1004 classes - 391 iterations
+10004 classes - 4 iterations (!)
+10004 classes - *ClassCastException* (!!!)
+10004 classes - 74 iterations
+10004 classes - 63 iterations
+10004 classes - 133 iterations
+10004 classes - 44 iterations
+10004 classes - *ClassCastException* (!!!)
+10004 classes - 104 iterations
+10004 classes - *ClassCastException* (!!!)
+- changed some set impl. and made the branch array more abstract - 
+10004 classes - 6 iterations (!)
+10004 classes - 1 iterations (!!)
+10004 classes - *ClassCastException* (!!!)
+- undid changes, but the array is still abstract - 
+10004 classes - 257 iterations
+10004 classes - 5 iterations
+- got rid of 2nd pass for kicks - 
+10004 classes - 0 iterations (9832 out of 10004 classes)
+10004 classes - 0 iterations (9987 out of 10004 classes)
+4 classes - 22 iterations (332 is missing)
+4 classes - 5 iterations (lmao is missing)
+4 classes - 8 iterations (332 is missing)
+- put the 2nd pass back -
+4 classes - enough iterations for a whole 4 minutes to pass and still not stop
+15 classes - 1706 iterations
+15 classes - 1122 iterations
+15 classes - 930 iterations
+15 classes - 2238 iterations
+15 classes - 3216 iterations
+15 classes - 496 iterations
+15 classes - 2609 iterations
+15 classes - 1105 iterations
+15 classes - 1418 iterations
+15 classes - 1918 iterations
+ 
+
