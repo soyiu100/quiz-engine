@@ -119,6 +119,7 @@ public class QMapVessel {
 		} else if (currQType.equals("e~")) {
 			qToExact.put(currQuestion, currAnswer);
 		}
+		System.out.println("Everything's processed!");
 
 	
 
