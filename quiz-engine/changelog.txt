@@ -7,7 +7,9 @@ TODO: somewhere between QuestionEditor and QuestionAdder, there needs to be a "d
 TODO: blacklisted chars!!!!!! use it~!!!!!!!!
 TODO: unimportant input to lowercase (so far this hasn't been important, but there might be something you missed)
 
-TODO: recently discovered issue where some files listed show up as null; might wanna check that out without doing a second pass
+2/1/2019
+- the partial functionality of engine after complete rework has been restored
+	- but there is still much more to do
 
 1/31/2019
 - Isaac discovers .list() and wonders why he didn't know of its existence until now

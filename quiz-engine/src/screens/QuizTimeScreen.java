@@ -22,7 +22,7 @@ public class QuizTimeScreen extends AbstractSelectionScreen {
 
 	@Override
 	void initCyclingOptions() {
-		cycleOptions = fp.getAllClasses();
+		cycleOptions.addAll(fp.getAllClasses());
 		cycleOptions.add(InputParser.quitMessage());
 	}
 
@@ -36,11 +36,7 @@ public class QuizTimeScreen extends AbstractSelectionScreen {
 				br = new BufferedReader(new FileReader(cycleOptions.get(prevResult - 1)));
 				QMapVessel qmv = new QMapVessel();
 				qmv.populate(br);
-				System.out.println(qmv.getQC());
-				System.out.println(qmv.getQS());
-				System.out.println(qmv.getQE());
-				System.out.println(qmv.getITQ());
-
+				new QuestionTimeScreen(sPtr, qmv);
 			} catch (Exception e) {
 				// TODO what is the right msg
 				System.out.println("Try again Dingodile");

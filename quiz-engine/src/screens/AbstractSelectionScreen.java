@@ -1,5 +1,6 @@
 package screens;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,6 +19,7 @@ public abstract class AbstractSelectionScreen implements AbstractScreen {
 		sPtr = scan;
 		this.fp = fp;
 		this.prevScr = scr;
+		cycleOptions = new ArrayList<>();
 		initGeneralStart();
 		initCyclingOptions();
 	}

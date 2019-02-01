@@ -2,46 +2,43 @@ package screens;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
 import structures.QMapVessel;
 
 public class QuestionTimeScreen {
-	
+
 	private static final String ANSI = "\033[";
 
 	/**
-	 * 0m - reset 
-	 * 30m - black 
-	 * 31m - red 
-	 * 32m - green 
-	 * 33m - yellow 
-	 * 34m - blue 
-	 * 35m - purple 
-	 * 36m - cyan
-	 * 37m - grey
+	 * 0m - reset 30m - black 31m - red 32m - green 33m - yellow 34m - blue 35m -
+	 * purple 36m - cyan 37m - grey
 	 */
 	private static final String RESET = "0m";
-	
+
 	protected Scanner sPtr;
 	protected QMapVessel qmvPtr;
-	
+
 	// TODO
 	public QuestionTimeScreen(Scanner scan, QMapVessel qmv) {
 		// this line below shouldn't be necessary if extending soon
 		sPtr = scan;
-		
+
 		qmvPtr = qmv;
-		initLocalQMap();
 		dummy();
 	}
-	
-	public void initLocalQMap() {
-		
-	}
-	
+
+
 	public void dummy() {
+
+		Map<String, ArrayList<String>> qToChoice = qmvPtr.getQC();
+		Map<String, ArrayList<String>> qToShort = qmvPtr.getQS();
+		Map<String, String> qToExact = qmvPtr.getQE();
+
+		Map<Integer, String> indToQ = qmvPtr.getITQ();
+
 		String str = "";
 		String qAsked = "";
 		int origQSize = indToQ.size();
@@ -86,13 +83,12 @@ public class QuestionTimeScreen {
 								answer += aBit + "\n";
 							}
 						}
-						aBit = s.nextLine();
+						aBit = sPtr.nextLine();
 					}
 					if (answer.length() > 0)
 						answer = answer.substring(0, answer.length() - 1);
 					if (!correctChoices.contains(answer) || giveUp) {
-						System.out
-								.println(ANSI + "0;31m" + ANSI + "1;40m" + "Wow, incorrect, vro..." + ANSI + RESET);
+						System.out.println(ANSI + "0;31m" + ANSI + "1;40m" + "Wow, incorrect, vro..." + ANSI + RESET);
 						System.out.println("Here are some choice(s) that you could have chosen...");
 						for (String choice : correctChoices)
 							System.out.println(choice);
@@ -100,8 +96,8 @@ public class QuestionTimeScreen {
 						System.out.println("Wow. Nice.");
 					}
 				} else if (typeToQuestion[0].equals("s")) {
-					System.out.println(ANSI + "0;36m"
-							+ "Answer this open-ended question to the best of your ability." + ANSI + RESET);
+					System.out.println(ANSI + "0;36m" + "Answer this open-ended question to the best of your ability."
+							+ ANSI + RESET);
 					ArrayList<String> shorts = qToShort.get(qAsked);
 					String answer = "";
 					String aBit = "";
@@ -117,7 +113,7 @@ public class QuestionTimeScreen {
 								answer += aBit + "\n";
 							}
 						}
-						aBit = s.nextLine();
+						aBit = sPtr.nextLine();
 					}
 					if (answer.length() > 0)
 						answer = answer.substring(0, answer.length() - 1);
@@ -189,13 +185,12 @@ public class QuestionTimeScreen {
 								answer += aBit + "\n";
 							}
 						}
-						aBit = s.nextLine();
+						aBit = sPtr.nextLine();
 					}
 					if (answer.length() > 0)
 						answer = answer.substring(0, answer.length() - 1);
 					if (!answer.equals(qToExact.get(qAsked).substring(1)) || giveUp) {
-						System.out
-								.println(ANSI + "0;31m" + ANSI + "1;40m" + "Wow, incorrect, vro..." + ANSI + RESET);
+						System.out.println(ANSI + "0;31m" + ANSI + "1;40m" + "Wow, incorrect, vro..." + ANSI + RESET);
 						System.out.println("Here's the correct answer:");
 						System.out.println(qToExact.get(qAsked).substring(1));
 					} else {
@@ -212,4 +207,5 @@ public class QuestionTimeScreen {
 		}
 		System.out.println("That's all, folk. Lol");
 
-}}
+	}
+}
