@@ -39,5 +39,10 @@
 15 classes - 1105 iterations
 15 classes - 1418 iterations
 15 classes - 1918 iterations
+----------------------------
+10005 classes - 18 iterations; HOWEVER it's only missing one file, 
+and considering that it originally couldn't get past 1 iteration without 
+missing huge chunks of files in a single pass, this is clearly a vast improvement
+	--- further investigation shows possible bug when adding up number of valid files
  
 
