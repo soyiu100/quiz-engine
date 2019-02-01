@@ -34,7 +34,7 @@ public class QuestionEditorScreen extends AbstractSelectionScreen {
 
 	@Override
 	void initCyclingOptions() {
-		cycleOptions = fp.getAllClasses();
+		cycleOptions.addAll(fp.getAllClasses());
 		cycleOptions.add(InputParser.quitMessage());
 	}
 

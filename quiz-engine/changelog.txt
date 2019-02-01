@@ -11,8 +11,12 @@ TODO: recently discovered issue where some files listed show up as null; might w
 
 1/31/2019
 - Isaac discovers .list() and wonders why he didn't know of its existence until now
-- stage 1 of 2 of FileProcessor overhaul
+- stage 1 of 2 of FileProcessor overhaul; need to fix some counting errors
 	note to self: ints and integers are immutable
+- stage 1 of 2 is fully complete, because it hit me that I don't
+need to count at all (at least for the initRun filter)
+- actually stage 1 of 1 of FP is complete, because the way it's implemented, there is no 
+need for a packing stage
 
 1/28/2019
 - motivated (pressured?) myself into picking it back up and making at _least_ 

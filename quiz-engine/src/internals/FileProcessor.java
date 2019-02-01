@@ -22,30 +22,23 @@ public class FileProcessor {
 	private final static ForkJoinPool POOL = new ForkJoinPool();
 
 	private Set<String> allFilenames;
-	private String[] files;
-	private MutInt numFiles;
-	private MutInt[] indexRecorder;
-	
+
 	public FileProcessor() {
 		allFilenames = new HashSet<String>();
-		files = new File(".").list();
-		numFiles = new MutInt();
 		initAllFiles();
 	}
 
 	private void initAllFiles() {
-		indexRecorder = new MutInt[files.length];
-		POOL.invoke(new WhiteOutTask(files, indexRecorder, 0, files.length, "", false, numFiles, true));
-		System.out.println(numFiles.val);
+		String[] files = new File(".").list();
+		POOL.invoke(new WhiteOutTask(files, 0, files.length, "", false, true));
+		allFilenames = new HashSet<String>(Arrays.asList(files));
+		// TODO still consider counting in parallel; rumors says .remove() is O(n) and
+		// could be pathetically slow if a lot of blacklisted names
+		allFilenames.remove("");
 	}
 
-	// TODO
-	public List<String> getAllClasses() {
-		return Arrays.asList(files);
-	}
-	
-	public List<MutInt> getIndexes() {
-		return Arrays.asList(indexRecorder);
+	public Set<String> getAllClasses() {
+		return new HashSet<String>(allFilenames);
 	}
 
 	public static class WhiteOutTask extends RecursiveAction {
@@ -53,9 +46,7 @@ public class FileProcessor {
 		private static final long serialVersionUID = 1L;
 
 		String[] files;
-		MutInt[] indexRecorder;
 		int lo, hi;
-		MutInt vwCount;
 		boolean initRun, purgeKey;
 		String keyword;
 
@@ -69,21 +60,16 @@ public class FileProcessor {
 		 *            if true, any word with the specified keyword will be whited out;
 		 *            if false, any word that doesn't have the specified keyword will be
 		 *            whited
-		 * @param vwCount
-		 *            valid word count; necessary for 2nd pass to pack
 		 * @param initRun
 		 *            if true, uses BLACKLISTED_NAMES to purge any names that have the
 		 *            keyword; if false, doesn't do anything special
 		 */
-		public WhiteOutTask(String[] files, MutInt[] indRec, int lo, int hi, String keyword, boolean purgeKey, MutInt vwCount,
-				boolean initRun) {
+		public WhiteOutTask(String[] files, int lo, int hi, String keyword, boolean purgeKey, boolean initRun) {
 			this.files = files;
-			this.indexRecorder = indRec;
 			this.lo = lo;
 			this.hi = hi;
 			this.keyword = keyword;
 			this.purgeKey = purgeKey;
-			this.vwCount = vwCount;
 			this.initRun = initRun;
 		}
 
@@ -95,36 +81,32 @@ public class FileProcessor {
 						WhiteOutTask[] branches = new WhiteOutTask[BLACKLISTED_NAMES.size()];
 						for (int i = 0; i < BLACKLISTED_NAMES.size() - 1; i++) {
 							// initRun should be false, or else infinite loop
-							branches[i] = new WhiteOutTask(files, indexRecorder, lo, lo + 1, BLACKLISTED_NAMES.get(i), true, vwCount,
-									false);
+							branches[i] = new WhiteOutTask(files, lo, lo + 1, BLACKLISTED_NAMES.get(i), true, false);
 							branches[i].fork();
 						}
-						new WhiteOutTask(files, indexRecorder, lo, lo + 1, BLACKLISTED_NAMES.get(BLACKLISTED_NAMES.size() - 1), true,
-								vwCount, false).compute();
+						new WhiteOutTask(files, lo, lo + 1, BLACKLISTED_NAMES.get(BLACKLISTED_NAMES.size() - 1), true,
+								false).compute();
 
 						for (int i = 0; i < BLACKLISTED_NAMES.size(); i++) {
 							if (i != BLACKLISTED_NAMES.size() - 1) {
 								branches[i].join();
 							}
 						}
-						
-						if (!files[lo].equals("")) {
-							indexRecorder[lo] = new MutInt(vwCount.val);
-							vwCount.inc();
-						}
+
 					} else {
 						if (purgeKey) {
 							if (files[lo].contains(keyword)) {
 								files[lo] = "";
-								indexRecorder[lo] = new MutInt(-1);
-
+							}
+						} else {
+							if (!files[lo].contains(keyword)) {
+								files[lo] = "";
 							}
 						}
 					}
 
 				} else {
 					files[lo] = "";
-					indexRecorder[lo] = new MutInt(-1);
 				}
 
 			} else if (hi - lo != 0) {
@@ -133,13 +115,13 @@ public class FileProcessor {
 				WhiteOutTask left = null;
 				WhiteOutTask right = null;
 
-				left = new WhiteOutTask(files, indexRecorder, lo, mid, keyword, false, vwCount, initRun);
-				right = new WhiteOutTask(files, indexRecorder, mid, hi, keyword, false, vwCount, initRun);
+				left = new WhiteOutTask(files, lo, mid, keyword, false, initRun);
+				right = new WhiteOutTask(files, mid, hi, keyword, false, initRun);
 
 				left.fork();
 				right.compute();
 				left.join();
-				
+
 			}
 		}
 
@@ -154,33 +136,7 @@ public class FileProcessor {
 	}
 
 	public int numClasses() {
-		return numFiles.val;
+		return this.allFilenames.size();
 	}
 
-	public static class MutInt {
-		public int val;
-		
-		public MutInt() {
-			this.val = 0;
-		}
-		
-		public MutInt(int val) {
-			this.val = val;
-		}
-		
-		MutInt inc() {
-			val++;
-			return new MutInt(val);
-		}
-		
-		 MutInt dec() {
-			val--;
-			return new MutInt(val);
-		}
-		
-		MutInt add(MutInt other) {
-			val += other.val;
-			return new MutInt(val);
-		}
-	}
 }

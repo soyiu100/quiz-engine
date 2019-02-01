@@ -1,10 +1,12 @@
 package internals;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
-import internals.FileProcessor.ClassListingTask;
+import internals.FileProcessor.WhiteOutTask;
 
 public class InputParser {
 
@@ -19,15 +21,15 @@ public class InputParser {
 	private final static ForkJoinPool POOL = new ForkJoinPool();
 
 	public static void printAllClasses(FileProcessor fp) {
-		printAllClasses(null, "", fp);
+		printAllClasses("", fp);
 	}
 
 	// TODO separate printing from processing; like have it return something so that
 	// the screen can print or something
-	public static void printAllClasses(List<String> newList, String keyword, FileProcessor fp) {
+	public static void printAllClasses(String keyword, FileProcessor fp) {
 		if (!FileProcessor.BLACKLISTED_NAMES.contains(keyword)) {
 			String possInitStr = "== Here are all of the courses currently created";
-			if (keyword.length() == 0 || newList == null) {
+			if (keyword.length() == 0) {
 				System.out.print(possInitStr);
 				System.out.println(" ==");
 				for (String filename : fp.getAllClasses()) {
@@ -35,13 +37,17 @@ public class InputParser {
 				}
 			} else {
 				String respondent = ", filtered by the keyword \"" + keyword + "\" ==";
-				POOL.invoke(new ClassListingTask(fp.getAllClasses(), newList, 0, fp.getAllClasses().size(), keyword));
-				if (newList.isEmpty()) {
+				Set<String> allClasses = fp.getAllClasses();
+				String[] names = allClasses.toArray(new String[allClasses.size()]);
+				POOL.invoke(new WhiteOutTask(names, 0, fp.getAllClasses().size(), keyword, false, false));
+				allClasses = new HashSet<String>(Arrays.asList(names));
+				allClasses.remove("");
+				if (allClasses.isEmpty()) {
 					System.out.print("== There are no courses" + respondent);
 				} else {
 					System.out.print(possInitStr);
 					System.out.println(respondent);
-					for (String filename : newList) {
+					for (String filename : allClasses) {
 						System.out.println(filename);
 					}
 				}

@@ -1,6 +1,5 @@
 package screens;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import internals.FileProcessor;
@@ -30,7 +29,7 @@ public class ListCoursesByKeywordScreen extends AbstractOpenInputScreen {
 				prevScr.screenStartAndLoop();
 				return -1;
 			}
-			InputParser.printAllClasses(new ArrayList<String>(), choice, fp);
+			InputParser.printAllClasses(choice, fp);
 		} 
 		System.out.println(startingText);
 		return 0;
